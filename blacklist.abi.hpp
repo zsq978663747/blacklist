@@ -23,9 +23,6 @@ const char* const blacklist_abi = R"=====(
       "fields": [{
           "name": "account",
           "type": "account_name"
-        },{
-          "name": "memo",
-          "type": "string"
         }
       ]
     },{

@@ -1,4 +1,5 @@
 (module
+ (type $FUNCSIG$vij (func (param i32 i64)))
  (type $FUNCSIG$viji (func (param i32 i64 i32)))
  (type $FUNCSIG$v (func))
  (type $FUNCSIG$j (func (result i64)))
@@ -13,6 +14,7 @@
  (type $FUNCSIG$iii (func (param i32 i32) (result i32)))
  (import "env" "abort" (func $abort))
  (import "env" "action_data_size" (func $action_data_size (result i32)))
+ (import "env" "add_blacklist" (func $add_blacklist (param i64)))
  (import "env" "current_receiver" (func $current_receiver (result i64)))
  (import "env" "current_time" (func $current_time (result i64)))
  (import "env" "db_find_i64" (func $db_find_i64 (param i64 i64 i64 i64) (result i32)))
@@ -25,8 +27,9 @@
  (import "env" "read_action_data" (func $read_action_data (param i32 i32) (result i32)))
  (import "env" "require_auth" (func $require_auth (param i64)))
  (import "env" "require_auth2" (func $require_auth2 (param i64 i64)))
+ (import "env" "rm_blacklist" (func $rm_blacklist (param i64)))
  (table 3 3 anyfunc)
- (elem (i32.const 0) $__wasm_nullptr $_ZN5eosio9blacklist12addblacklistEyNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE $_ZN5eosio9blacklist11rmblacklistEyNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE)
+ (elem (i32.const 0) $__wasm_nullptr $_ZN5eosio9blacklist12addblacklistEyNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE $_ZN5eosio9blacklist11rmblacklistEy)
  (memory $0 1)
  (data (i32.const 4) "pK\00\00")
  (data (i32.const 16) "object passed to iterator_to is not in multi_index\00")
@@ -51,7 +54,7 @@
  (export "now" (func $now))
  (export "_ZN5eosio12require_authERKNS_16permission_levelE" (func $_ZN5eosio12require_authERKNS_16permission_levelE))
  (export "_ZN5eosio9blacklist12addblacklistEyNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE" (func $_ZN5eosio9blacklist12addblacklistEyNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE))
- (export "_ZN5eosio9blacklist11rmblacklistEyNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE" (func $_ZN5eosio9blacklist11rmblacklistEyNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE))
+ (export "_ZN5eosio9blacklist11rmblacklistEy" (func $_ZN5eosio9blacklist11rmblacklistEy))
  (export "apply" (func $apply))
  (export "memcmp" (func $memcmp))
  (export "malloc" (func $malloc))
@@ -193,6 +196,11 @@
      )
      (i32.const 16)
     )
+    (set_local $1
+     (i64.load offset=48
+      (get_local $7)
+     )
+    )
     (set_local $6
      (i32.const 0)
     )
@@ -206,7 +214,10 @@
    (get_local $6)
    (i32.const 80)
   )
-  (set_local $4
+  (call $add_blacklist
+   (get_local $1)
+  )
+  (set_local $1
    (i64.load
     (get_local $0)
    )
@@ -224,7 +235,7 @@
   )
   (i64.store offset=88
    (get_local $7)
-   (get_local $4)
+   (get_local $1)
   )
   (call $eosio_assert
    (i64.eq
@@ -285,7 +296,7 @@
   )
   (i64.store offset=64
    (get_local $7)
-   (tee_local $4
+   (tee_local $1
     (i64.load
      (get_local $0)
     )
@@ -320,7 +331,7 @@
     )
     (i64.store offset=8
      (get_local $2)
-     (get_local $4)
+     (get_local $1)
     )
     (i32.store offset=16
      (get_local $2)
@@ -2463,15 +2474,15 @@
    (return)
   )
  )
- (func $_ZN5eosio9blacklist11rmblacklistEyNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE (type $FUNCSIG$viji) (param $0 i32) (param $1 i64) (param $2 i32)
+ (func $_ZN5eosio9blacklist11rmblacklistEy (type $FUNCSIG$vij) (param $0 i32) (param $1 i64)
+  (local $2 i32)
   (local $3 i32)
-  (local $4 i32)
-  (local $5 i64)
+  (local $4 i64)
+  (local $5 i32)
   (local $6 i32)
-  (local $7 i32)
   (i32.store offset=4
    (i32.const 0)
-   (tee_local $7
+   (tee_local $6
     (i32.sub
      (i32.load offset=4
       (i32.const 0)
@@ -2482,30 +2493,30 @@
   )
   (i32.store
    (i32.add
-    (get_local $7)
+    (get_local $6)
     (i32.const 40)
    )
    (i32.const 0)
   )
   (i64.store offset=24
-   (get_local $7)
+   (get_local $6)
    (i64.const -1)
   )
   (i64.store offset=32
-   (get_local $7)
+   (get_local $6)
    (i64.const 0)
   )
   (i64.store offset=8
-   (get_local $7)
-   (tee_local $5
+   (get_local $6)
+   (tee_local $4
     (i64.load
      (get_local $0)
     )
    )
   )
   (i64.store offset=16
-   (get_local $7)
-   (get_local $5)
+   (get_local $6)
+   (get_local $4)
   )
   (set_local $0
    (i32.const 0)
@@ -2513,10 +2524,10 @@
   (block $label$0
    (br_if $label$0
     (i32.lt_s
-     (tee_local $4
+     (tee_local $3
       (call $db_find_i64
-       (get_local $5)
-       (get_local $5)
+       (get_local $4)
+       (get_local $4)
        (i64.const 4344997574076792832)
        (get_local $1)
       )
@@ -2530,15 +2541,15 @@
       (tee_local $0
        (call $_ZNK5eosio11multi_indexILy4344997574076792832ENS_9blacklist15actor_blacklistEJEE31load_object_by_primary_iteratorEl
         (i32.add
-         (get_local $7)
+         (get_local $6)
          (i32.const 8)
         )
-        (get_local $4)
+        (get_local $3)
        )
       )
      )
      (i32.add
-      (get_local $7)
+      (get_local $6)
       (i32.const 8)
      )
     )
@@ -2552,9 +2563,12 @@
    )
    (i32.const 272)
   )
+  (call $rm_blacklist
+   (get_local $1)
+  )
   (call $_ZN5eosio11multi_indexILy4344997574076792832ENS_9blacklist15actor_blacklistEJEE5eraseERKS2_
    (i32.add
-    (get_local $7)
+    (get_local $6)
     (i32.const 8)
    )
    (get_local $0)
@@ -2562,9 +2576,9 @@
   (block $label$1
    (br_if $label$1
     (i32.eqz
-     (tee_local $3
+     (tee_local $2
       (i32.load offset=32
-       (get_local $7)
+       (get_local $6)
       )
      )
     )
@@ -2575,19 +2589,19 @@
       (i32.eq
        (tee_local $0
         (i32.load
-         (tee_local $6
+         (tee_local $5
           (i32.add
-           (get_local $7)
+           (get_local $6)
            (i32.const 36)
           )
          )
         )
        )
-       (get_local $3)
+       (get_local $2)
       )
      )
      (loop $label$4
-      (set_local $4
+      (set_local $3
        (i32.load
         (tee_local $0
          (i32.add
@@ -2604,7 +2618,7 @@
       (block $label$5
        (br_if $label$5
         (i32.eqz
-         (get_local $4)
+         (get_local $3)
         )
        )
        (block $label$6
@@ -2612,7 +2626,7 @@
          (i32.eqz
           (i32.and
            (i32.load8_u offset=8
-            (get_local $4)
+            (get_local $3)
            )
            (i32.const 1)
           )
@@ -2621,19 +2635,19 @@
         (call $_ZdlPv
          (i32.load
           (i32.add
-           (get_local $4)
+           (get_local $3)
            (i32.const 16)
           )
          )
         )
        )
        (call $_ZdlPv
-        (get_local $4)
+        (get_local $3)
        )
       )
       (br_if $label$4
        (i32.ne
-        (get_local $3)
+        (get_local $2)
         (get_local $0)
        )
       )
@@ -2641,7 +2655,7 @@
      (set_local $0
       (i32.load
        (i32.add
-        (get_local $7)
+        (get_local $6)
         (i32.const 32)
        )
       )
@@ -2649,12 +2663,12 @@
      (br $label$2)
     )
     (set_local $0
-     (get_local $3)
+     (get_local $2)
     )
    )
    (i32.store
-    (get_local $6)
-    (get_local $3)
+    (get_local $5)
+    (get_local $2)
    )
    (call $_ZdlPv
     (get_local $0)
@@ -2663,7 +2677,7 @@
   (i32.store offset=4
    (i32.const 0)
    (i32.add
-    (get_local $7)
+    (get_local $6)
     (i32.const 48)
    )
   )
@@ -3480,7 +3494,7 @@
     )
    )
    (drop
-    (call $_ZN5eosio14execute_actionINS_9blacklistES1_JyNSt3__112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEEEEEbPT_MT0_FvDpT1_E
+    (call $_ZN5eosio14execute_actionINS_9blacklistES1_JyEEEbPT_MT0_FvDpT1_E
      (i32.add
       (get_local $9)
       (i32.const 40)
@@ -3706,6 +3720,168 @@
    (i32.add
     (get_local $2)
     (i32.const 64)
+   )
+  )
+  (i32.const 1)
+ )
+ (func $_ZN5eosio14execute_actionINS_9blacklistES1_JyEEEbPT_MT0_FvDpT1_E (param $0 i32) (param $1 i32) (result i32)
+  (local $2 i32)
+  (local $3 i64)
+  (local $4 i32)
+  (local $5 i32)
+  (local $6 i32)
+  (set_local $6
+   (tee_local $4
+    (i32.sub
+     (i32.load offset=4
+      (i32.const 0)
+     )
+     (i32.const 16)
+    )
+   )
+  )
+  (i32.store offset=4
+   (i32.const 0)
+   (get_local $4)
+  )
+  (set_local $2
+   (i32.load offset=4
+    (get_local $1)
+   )
+  )
+  (set_local $5
+   (i32.load
+    (get_local $1)
+   )
+  )
+  (block $label$0
+   (block $label$1
+    (block $label$2
+     (block $label$3
+      (br_if $label$3
+       (i32.eqz
+        (tee_local $1
+         (call $action_data_size)
+        )
+       )
+      )
+      (br_if $label$2
+       (i32.lt_u
+        (get_local $1)
+        (i32.const 513)
+       )
+      )
+      (set_local $4
+       (call $malloc
+        (get_local $1)
+       )
+      )
+      (br $label$1)
+     )
+     (set_local $4
+      (i32.const 0)
+     )
+     (br $label$0)
+    )
+    (i32.store offset=4
+     (i32.const 0)
+     (tee_local $4
+      (i32.sub
+       (get_local $4)
+       (i32.and
+        (i32.add
+         (get_local $1)
+         (i32.const 15)
+        )
+        (i32.const -16)
+       )
+      )
+     )
+    )
+   )
+   (drop
+    (call $read_action_data
+     (get_local $4)
+     (get_local $1)
+    )
+   )
+  )
+  (i64.store offset=8
+   (get_local $6)
+   (i64.const 0)
+  )
+  (call $eosio_assert
+   (i32.gt_u
+    (get_local $1)
+    (i32.const 7)
+   )
+   (i32.const 240)
+  )
+  (drop
+   (call $memcpy
+    (i32.add
+     (get_local $6)
+     (i32.const 8)
+    )
+    (get_local $4)
+    (i32.const 8)
+   )
+  )
+  (set_local $3
+   (i64.load offset=8
+    (get_local $6)
+   )
+  )
+  (block $label$4
+   (br_if $label$4
+    (i32.lt_u
+     (get_local $1)
+     (i32.const 513)
+    )
+   )
+   (call $free
+    (get_local $4)
+   )
+  )
+  (set_local $1
+   (i32.add
+    (get_local $0)
+    (i32.shr_s
+     (get_local $2)
+     (i32.const 1)
+    )
+   )
+  )
+  (block $label$5
+   (br_if $label$5
+    (i32.eqz
+     (i32.and
+      (get_local $2)
+      (i32.const 1)
+     )
+    )
+   )
+   (set_local $5
+    (i32.load
+     (i32.add
+      (i32.load
+       (get_local $1)
+      )
+      (get_local $5)
+     )
+    )
+   )
+  )
+  (call_indirect (type $FUNCSIG$vij)
+   (get_local $1)
+   (get_local $3)
+   (get_local $5)
+  )
+  (i32.store offset=4
+   (i32.const 0)
+   (i32.add
+    (get_local $6)
+    (i32.const 16)
    )
   )
   (i32.const 1)
